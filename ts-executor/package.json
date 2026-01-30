@@ -4,11 +4,14 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "fetch-position": "node dist/fetch-position.js"
+    "fetch-position": "node dist/fetch-position.js",
+    "withdraw-all": "node dist/withdraw-all.js"
   },
   "dependencies": {
     "@orca-so/whirlpools": "^4.0.0",
-    "@solana/kit": "^2.1.0"
+    "@solana/kit": "^2.1.0",
+    "dotenv": "^16.4.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

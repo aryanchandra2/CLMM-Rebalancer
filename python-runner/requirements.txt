@@ -1,2 +1,5 @@
-# No external dependencies required for basic functionality
-# subprocess and json are part of Python standard library
+# Jupiter swap dependencies
+requests>=2.31.0
+solders>=0.21.0
+base58>=2.1.0
+python-dotenv>=1.0.0

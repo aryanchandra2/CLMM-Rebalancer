@@ -41,7 +41,7 @@ Create `.env` in the project root:
 ```env
 SOLANA_RPC_URL=https://your-rpc-endpoint.com
 SOLANA_PRIVATE_KEY=your-base58-private-key
-JUPITER_API_KEY=optional-jupiter-api-key
+JUPITER_API_KEY=jupiter-api-key
 ```
 
 ## Configuration

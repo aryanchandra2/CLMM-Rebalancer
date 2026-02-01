@@ -1,0 +1,14 @@
+{
+  "pool_address": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+  "position_mint": null,
+  "check_interval_seconds": 60,
+  "rebalance_triggers": {
+    "out_of_range": true,
+    "edge_threshold_pct": 10
+  },
+  "range_width_pct": 5.0,
+  "target_sol_pct": 50.0,
+  "dry_run": false,
+  "min_swap_value_usd": 1.0,
+  "slippage_bps": 100
+}

@@ -367,6 +367,115 @@ def swap_usdc_to_sol(amount_usdc: int, slippage_bps: int = DEFAULT_SLIPPAGE_BPS)
     return swap(USDC_MINT, SOL_MINT, amount_usdc, slippage_bps)
 
 
+def get_sol_balance(pubkey: str | None = None) -> int:
+    """
+    Get SOL balance for a wallet.
+
+    Args:
+        pubkey: Wallet public key (uses loaded keypair if None)
+
+    Returns:
+        Balance in lamports
+    """
+    if pubkey is None:
+        keypair = load_keypair()
+        pubkey = str(keypair.pubkey())
+
+    rpc_url = get_rpc_url()
+    response = requests.post(
+        rpc_url,
+        json={
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "getBalance",
+            "params": [pubkey],
+        },
+        headers={"Content-Type": "application/json"},
+        timeout=30,
+    )
+    response.raise_for_status()
+    result = response.json()
+
+    if "error" in result:
+        raise ValueError(f"RPC error: {result['error']}")
+
+    return result["result"]["value"]
+
+
+def get_token_balance(mint: str, pubkey: str | None = None) -> int:
+    """
+    Get SPL token balance for a wallet.
+
+    Args:
+        mint: Token mint address
+        pubkey: Wallet public key (uses loaded keypair if None)
+
+    Returns:
+        Balance in smallest units
+    """
+    if pubkey is None:
+        keypair = load_keypair()
+        pubkey = str(keypair.pubkey())
+
+    rpc_url = get_rpc_url()
+    response = requests.post(
+        rpc_url,
+        json={
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "getTokenAccountsByOwner",
+            "params": [
+                pubkey,
+                {"mint": mint},
+                {"encoding": "jsonParsed"},
+            ],
+        },
+        headers={"Content-Type": "application/json"},
+        timeout=30,
+    )
+    response.raise_for_status()
+    result = response.json()
+
+    if "error" in result:
+        raise ValueError(f"RPC error: {result['error']}")
+
+    accounts = result["result"]["value"]
+    if not accounts:
+        return 0
+
+    # Sum all token accounts (usually just one)
+    total = 0
+    for account in accounts:
+        amount = account["account"]["data"]["parsed"]["info"]["tokenAmount"]["amount"]
+        total += int(amount)
+
+    return total
+
+
+def get_wallet_balances(pubkey: str | None = None) -> dict:
+    """
+    Get SOL and USDC balances for a wallet.
+
+    Args:
+        pubkey: Wallet public key (uses loaded keypair if None)
+
+    Returns:
+        Dict with sol_lamports and usdc_amount
+    """
+    if pubkey is None:
+        keypair = load_keypair()
+        pubkey = str(keypair.pubkey())
+
+    sol_balance = get_sol_balance(pubkey)
+    usdc_balance = get_token_balance(USDC_MINT, pubkey)
+
+    return {
+        "sol_lamports": sol_balance,
+        "usdc_amount": usdc_balance,
+        "pubkey": pubkey,
+    }
+
+
 # CLI interface
 if __name__ == "__main__":
     import argparse

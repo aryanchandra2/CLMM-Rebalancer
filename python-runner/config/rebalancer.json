@@ -4,7 +4,7 @@
   "check_interval_seconds": 60,
   "rebalance_triggers": {
     "out_of_range": true,
-    "edge_threshold_pct": 10
+    "edge_threshold_pct": 35
   },
   "range_width_pct": 5.0,
   "target_sol_pct": 50.0,
